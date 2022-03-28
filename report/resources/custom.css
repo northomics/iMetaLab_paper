@@ -1,0 +1,212 @@
+.main-header .logo {
+	font-family: "Calibri","Georgia", Times, "Times New Roman", serif;
+	font-weight: bold;
+	font-size: 24px;
+}
+
+
+.skin-blue .main-sidebar {
+	font-family: "Calibri";
+	font-size:18px;
+	line-height:1.42857143;
+	color:#ebebeb;
+}
+
+
+.skin-blue .main-header .logo {
+	background-color: #404040;
+}
+
+/* logo when hovered */
+.skin-blue .main-header .logo:hover {
+	background-color: #404040;
+}
+
+/* navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+	background-color: #404040;
+}        
+
+.skin-blue .main-sidebar {
+	background-color: #302F2F;
+}
+
+/* setup the primay box color */
+.box.box-solid.box-primary>.box-header {
+  color:#fff;
+  background:#666666
+}
+
+.box.box-solid.box-primary{
+	border-bottom-color:#666666;
+	border-left-color:#666666;
+	border-right-color:#666666;
+	border-top-color:#666666;
+}
+
+/* setup all box header width */
+.box-header {
+    color: #444444;
+    display: block;
+    padding: 6px;
+    position: relative;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+
+.main-sidebar, .left-side {
+      width: 250px;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper,
+  .right-side,
+  .main-footer {
+    margin-left: 250px;
+  }
+  .main-sidebar,
+  .left-side {
+    width: 250px;
+  }
+}
+@media (max-width: 767px) {
+  .sidebar-open .content-wrapper,
+  .sidebar-open .right-side,
+  .sidebar-open .main-footer {
+    -webkit-transform: translate(250px, 0);
+    -ms-transform: translate(250px, 0);
+    -o-transform: translate(250px, 0);
+    transform: translate(250px, 0);
+  }
+}
+@media (max-width: 767px) {
+  .main-sidebar,
+  .left-side {
+    -webkit-transform: translate(-250px, 0);
+    -ms-transform: translate(-250px, 0);
+    -o-transform: translate(-250px, 0);
+    transform: translate(-250px, 0);
+  }
+}
+@media (min-width: 768px) {
+  .sidebar-collapse .main-sidebar,
+  .sidebar-collapse .left-side {
+    -webkit-transform: translate(-250px, 0);
+    -ms-transform: translate(-250px, 0);
+    -o-transform: translate(-250px, 0);
+    transform: translate(-250px, 0);
+  }
+}
+@media (min-width: 768px) {
+  .main-header > .navbar {
+    margin-left: 470px;
+  }
+  .main-header .logo {
+    width: 470px;
+  }
+}
+      
+    
+      
+/* A replacement for .small-box .icon, where the icon is smaller and doesn't change size when moused over. */
+.small-box .icon-large {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  font-size: 70px;
+  color: rgba(0, 0, 0, 0.15);
+}
+
+/* So that selectize dropdowns are visible if they go off the bottom. */
+.content {
+  overflow: visible;
+}
+
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > .glyphicon,
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > .fa,
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > .ion {
+  float: left;
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  margin-right: 5px;
+  color: #000;
+}
+
+/* Sidebar user panel needs a minimum height when there's no image. */
+section.sidebar .user-panel {
+  min-height: 65px;
+}
+
+/* Inputs in the sidebar */
+section.sidebar .shiny-input-container {
+  /* Proper spacing around inputs. */
+  padding: 12px 15px 0px 15px;
+  /* Wrap content (important for inline inputs). */
+  white-space: normal;
+}
+
+/* Make action buttons/links look good on the sidebar panel */
+section.sidebar .shiny-bound-input.action-button,
+section.sidebar .shiny-bound-input.action-link {
+  margin: 6px 5px 6px 15px;
+  display: block;
+}
+
+/* Shiny inputs in boxes should span full width. */
+div.box-body .shiny-input-container {
+  width: auto;
+}
+
+/* Sidebar is dark, so make text light by default. */
+.sidebar {
+  color: #fff;
+}
+/* Slider min and max in sidebar. */
+.sidebar .irs-min, .sidebar .irs-max {
+  color: #aaa;
+}
+
+/* Don't highlight text when info box is in <a> tag */
+a > .info-box {
+  color: #333;
+}
+
+/*  Shiny Server Pro logout panel needs to be raised above menu bar */
+.shiny-server-account {
+  z-index: 2000;
+}
+
+/* fontAwesome is the FA4 family name; 'Font Awesome 5 Free' is the FA 5 name.
+ * This rule makes the sidebar-toggle 'bars' icon appear properly both in
+ * Shiny <= 1.1 (FA4) and Shiny 1.2+ (FA5).
+ * The font-weight value is for FA5, as multiple styles are mapped
+ * to different weights.
+ */
+.main-header .sidebar-toggle {
+  font-family: fontAwesome, 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+
+
+iframe { 
+  position: relative;
+  top: 1px;
+  bottom: 1px;
+  left:1px;
+  right: 1px;
+  width: 100%;
+  height: 800px;
+  border: 0;
+  margin: 5;
+  z-index: 999999;
+}
+
+
+
