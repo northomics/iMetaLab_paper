@@ -1,0 +1,241 @@
+<html>
+  
+  <head>
+      <title>Metalab 2.2 Report </title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="shortcut icon" type="image/x-icon" href="resources/favicon.ico"/>
+   
+      
+      <script src="js/jquery.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      
+      <script src="js/underscore-min.js"></script>    
+      <script src="js/opencpu-0.5.js"></script>
+      
+      <script src="mydata.json"></script>
+      
+      
+      <link href="resources/bootstrap.min.css" rel="stylesheet" />
+      <link href="resources/AdminLTE.min.css" rel="stylesheet" />
+      <link href="resources/_all-skins.min.css" rel="stylesheet" />
+      <link href="resources/custom.css" rel="stylesheet" />
+      <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+      <!-- 
+      
+      -->
+      
+     <!--  This script control sthe left nevigation bar behavior  -->
+    <script>
+          
+          $(function(){
+          var a=function(){var a=$(".sidebar-menu a[data-toggle='tab'],.sidebar-menu li.treeview > a");
+          
+          a.not($(this)).parent("li").removeClass("active");
+          
+          var b=$(".sidebarMenuSelectedTabItem"), c=b.data("shiny-input-binding");
+          "undefined"!=typeof c&&(c.setValue(b,$(this).attr("data-value")),b.trigger("change"))};
+          
+          $(document).on("shown.bs.tab",'.sidebar-menu a[data-toggle="tab"]',a);
+          
+          var b=function(){var a=$(".sidebar-menu a[data-toggle='tab']"),b=a.filter("[data-start-selected='1']");
+          0===b.length&&(b=a.first()),0!==b.length&&(b.tab("show"),$(".sidebarMenuSelectedTabItem").attr("data-value",b.attr("data-value")))};
+          
+          b(),$("section.sidebar").data("disable")&&($("body").addClass("sidebar-collapse"),$(".navbar > .sidebar-toggle").hide());
+          
+          var c=function(){return $(".main-sidebar").offset().left<0},d=function(){$(window).trigger("resize");
+          var a=$(".main-sidebar.shiny-bound-input"),b=a.data("shiny-input-binding");
+          b.setValue(a,c()),a.trigger("change")};
+          
+          $(".main-sidebar").on("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",d),$(".main-sidebar").offset().left<0&&$(".main-sidebar").attr("data-collapsed","true"),$(document).on("click",".treeview > a",function(){var a=$(this).next();
+          a.hasClass("menu-open")?a.trigger("hidden"):a.hasClass("treeview-menu")&&a.trigger("shown");
+          var b=$("section.sidebar.shiny-bound-input");
+          setTimeout(function(){b.trigger("change")},600)});
+                
+      });
+          
+
+  </script>
+    
+    
+    
+    
+  </head>
+
+
+  <body class="skin-blue" style="min-height: 611px;">
+    <div class="wrapper">
+      
+        <!--  header navigation bar -->
+      
+      <header class="main-header">
+        <span class="logo">
+          <span>
+            <img src="resources/logo_imetalab.png" width="120"/>
+            MetaLab 2.2 Result Summary
+          </span>
+        </span>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <span style="display:none;">
+            <i class="fa fa-bars"></i>
+          </span>
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a> <img height="18px" alt="SNAP Logo" src="resources/logo_M.png"/> </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        
+      </header>
+      
+      
+      <!-- left side navigation bar -->
+      
+      <aside id="sidebarCollapsed" class="main-sidebar" data-collapsed="false">
+        <section id="sidebarItemExpanded" class="sidebar">
+          
+          <ul class="sidebar-menu">
+            
+			<li class="treeview">
+            <a href="#shiny-tab-dashboard" data-toggle="tab" data-value="dashboard">
+			   <i class="icon-dashboard"></i>
+               <span>Reports</span>
+              
+            </a>
+			
+			
+            <ul class="treeview-menu menu-open" style="display: block;" data-expanded="Reports">
+              <li>
+                <a href="./reports/rmd_html/report_ID_summary.html" target="iframe_a">
+                  <i class="icon-double-angle-right"></i>
+                    ID Summary
+                </a>
+              </li>
+              <li>
+				<a href="./reports/rmd_html/report_peptides_summary.html" target="iframe_a">
+                  <i class="icon-double-angle-right"></i>
+                   Peptides Summary
+                </a>
+              </li>			  
+			  
+              <li>
+				<a href="./reports/rmd_html/report_proteinGroups_summary.html" target="iframe_a">
+                  <i class="icon-double-angle-right"></i>
+                   ProteinGroups Summary
+                </a>
+              </li>
+
+              <li>
+				<a href="./reports/rmd_html/report_taxonomy_summary.html" target="iframe_a">
+                  <i class="icon-double-angle-right"></i>
+                   Taxon Summary
+                </a>
+              </li>
+
+              <li>
+				<a href="./reports/rmd_html/report_function_summary.html" target="iframe_a">
+                  <i class="icon-double-angle-right"></i>
+                   Function Summary
+                </a>
+              </li>
+			  
+              <li>
+				<a href="./reports/metamap/index.html" target="iframe_a">
+                  <i class="icon-double-angle-right"></i>
+                   MetaMep for Taxon Vis
+                </a>
+              </li>			  
+			  
+            </ul>
+          </li>
+            
+            <li>
+              <a href="./reports/shinyapps/index.html" target="iframe_a">
+                <i class="icon-sun"></i>
+                <span>ShinyApps</span>
+              </a>
+            </li>			
+            
+            <li>
+              <a href="http://www.imetalab.ca" target="_blank">
+                <i class="icon-home"></i>
+                <span>iMetaLab</span>
+              </a>
+            </li>
+            
+
+        
+          </ul>
+        </section>
+      </aside>
+      
+      
+      
+      
+       <!--  content section -->
+      
+      <div class="content-wrapper">
+        <section class="content">
+          <div class="tab-content">
+            
+            
+             <!--  tab panel Report section -->
+             
+            <div role="tabpanel" class="tab-pane" id="shiny-tab-dashboard">
+              <div class="row">
+                   <!--  iframe output section -->
+                  <div class="col-sm-12">
+                        <iframe name="iframe_a"; src="./reports/shinyapps/home.html" allowtransparency="true" onload="this.style.height=(this.contentDocument.body.scrollHeight+45) +'px !important';" scrolling="yes" style="width:100%;min-height:1000px;border:none;overflow-y:hidden;overflow-x:hidden;"></iframe>
+                  </div>
+
+              </div>
+            </div>
+            
+			
+	
+
+            
+            <!--  tab panel "about" section  -->
+            
+            <div role="tabpanel" class="tab-pane" id="shiny-tab-about">
+              <div class="row">
+
+                <div class="col-sm-12">
+                  <div class="box box-solid box-primary">
+                    <div class="box-header">
+                      <h3 class="box-title">Contact</h3>
+                    </div>
+                    <div class="box-body">
+                      Author: MetaLab Team
+                      <br/>
+                      Email: imetalabca@gmail.com
+                      <br/>
+                      <a href="https://groups.google.com/forum/#!forum/lovemetalab" target="_blank">Suggestions and bug report</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			
+			
+		
+			
+			
+			
+			
+			
+			
+          </div>
+          
+        </section>
+      </div>
+    </div>
+  </body>
+
+
+
+</html>
