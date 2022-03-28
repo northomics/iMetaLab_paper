@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MetaMap Dashboard</title>
+    <!-- 3rd Party -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/jspanel.css">
+    <link rel="stylesheet" href="css/farbtastic.css">
+    <link rel="stylesheet" href="css/fontawesome.all.min.css">
+    <!-- App -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/d3-context-menu.css">
+    <!-- User's Data -->
+    <script src="data/tree.js"></script>
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+
+
+    <!-- Main view -->
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- Sidebar -->
+            <div class="col-lg-2 bg-light shadow">
+                <div class="sidebar py-3 d-flex flex-column h-100">
+                    <!-- Chart Select -->
+                    <select id="chart-selection" class="sidebar-item custom-select">
+                        <option value="circle-packing">Circle Packing</option>
+                        <option value="static-treemap">Treemap</option>
+                        <option value="sunburst">Sunburst</option>
+                        <option value="horizontal-tree">Horizontal Tree</option>
+                        <option value="radial-tree">Radial Tree</option>
+                        <option value="hierarchical-bars">Hierarchical Bar Chart</option>
+                    </select>
+                    <!-- Data-specific Sample Selection -->
+                    <div class="sidebar-item">
+                        <div class="d-flex align-items-baseline">
+                            <label for="samples" class="text-primary">Samples</label>
+                            <button class="btn btn-sm btn-light" data-toggle="modal" data-target="#samples-modal">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <!-- Upload File / Export Chart buttons -->
+                            <input type="file" id="file-upload" style="display: none;" />
+                            <button class="btn btn-sm btn-light ml-auto" onclick="document.getElementById('file-upload').click();" data-tooltip="tooltip" data-placement="top" title="Upload File" data-delay='{"show":"500"}'>
+                                <i class="fas fa-upload"></i>
+                            </button>
+                            <div class="btn-group dropdown" id="chart-export">
+                                <button class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" data-tooltip="tooltip" data-placement="top" title="Save Chart As" data-delay='{"show":"500"}'>
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button id="convert-png" class="dropdown-item">Export as PNG</button>
+                                    <button id="convert-svg" class="dropdown-item">Export as SVG</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Samples List -->
+                        <select id="samples" class="form-control" size="10"></select>
+                    </div>
+                    <!-- Toolbar -->
+                    <label for="toolbar" class="text-primary">Tools</label>
+                    <div id="toolbar" class="sidebar-item btn-group">
+                        <!-- Zoom Buttons -->
+                        <button class="btn btn-sm btn-outline-dark toolbar-button zoom-button" id="zoom-in" data-tooltip="tooltip" data-placement="top" title="Zoom In" data-delay='{"show":"500"}'>
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark toolbar-button zoom-button" id="zoom-out" data-tooltip="tooltip" data-placement="top" title="Zoom Out" data-delay='{"show":"500"}'>
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <!-- Font Size Buttons -->
+                        <button class="btn btn-sm btn-outline-dark toolbar-button font-button" id="font-up" data-tooltip="tooltip" data-placement="top" title="Increase Font Size" data-delay='{"show":"500"}'>
+                            <i class="fas fa-font"></i><sup>+</sup>
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark toolbar-button font-button" id="font-down" data-tooltip="tooltip" data-placement="top" title="Decrease Font Size" data-delay='{"show":"500"}'>
+                            <i class="fas fa-font"></i><sup>-</sup>
+                        </button>
+                        <!-- Toggle Buttons -->
+                        <button class="btn btn-sm btn-outline-dark toolbar-button toggle-button" id="toggle-node-labels" data-tooltip="tooltip" data-placement="top" title="Toggle Labels" data-delay='{"show":"500"}'>
+                            <i class="fas fa-font"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark toolbar-button toggle-button" id="toggle-node-circles" data-tooltip="tooltip" data-placement="top" title="Normalize Node Size" data-delay='{"show":"500"}'>
+                            <i class="fas fa-genderless"></i>
+                        </button>
+                        </button>
+                        <!-- Color Palette Button -->
+                        <button class="btn btn-sm btn-outline-danger toolbar-button border-dark" id="color-palette" data-tooltip="tooltip" data-placement="top" title="Customize Color Palette" data-delay='{"show":"500"}'>
+                            <i class="fas fa-palette"></i>
+                        </button>
+                        <!-- Help Button -->
+                        <button class="btn btn-sm btn-outline-primary border-dark" id="chart-help" data-toggle="modal" data-target="#circle-packing-help-modal" data-tooltip="tooltip" data-placement="top" title="Chart Help" data-delay='{"show":"500"}'>
+                            <i class="fas fa-question"></i>
+                        </button>
+                    </div>
+                    <!-- Color Slider -->
+                    <div class="sidebar-item">
+                        <input type="range" id="toolbar-slider" class="custom-range" name="toolbar-slider" value="2" min="2" max="8" step="1" disabled>
+                        <label for="toolbar-slider" id="color-rank" class="my-0">Color by</label>
+                    </div>
+                    <!-- Mini Chart -->
+                    <div class="sidebar-item h-100">
+                        <div class="d-flex align-items-baseline">
+                            <input type="radio" id="abs-option" name="ms-intensity-option" value="abs" checked>
+                            <label for="abs-option">Absolute</label>
+                            <input type="radio" id="relative-option" name="ms-intensity-option" value="rel">
+                            <label for="relative-option">Relative</label>
+                            <button id="toggle-mini-chart-type" class="btn btn-sm btn-light ml-auto" data-tooltip="tooltip" data-placement="top" title="Placeholder" data-delay='{"show":"500"}'>
+                                <i class="fas fa-chart-pie"></i>
+                            </button>
+                        </div>
+                        <svg id="mini-chart" class="border" xmlns="http://www.w3.org/2000/svg"></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization window -->
+            <div class="col-lg-10">
+                <div id="main-view" class="p-2s h-100 d-flex flex-column justify-content-between">
+                    <div class="row border flex-fill my-1">
+                        <svg id="chart-display" xmlns="http://www.w3.org/2000/svg"></svg>
+                        <div id="csv-display">
+                            <table class="csv-data table table-striped">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="viz-tooltip"></div>
+    
+    <!-- About Modal -->
+    <div class="modal fade" id="about-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">About MetaMap</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>A suite of metaproteomics data visualization tools.</p>
+                    <p>This project was created in the summer of 2019 and is supported by The Figeys Lab at the uOttawa Faculty of Medicine.
+                        We plan to integrate this app as the data visualization module for iMetaLab 2.0.
+                        Features and bug fixes are being pushed out every week.</p>
+                    <footer class="blockquote-footer">Thomas Hai Li</footer>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Feedback Modal -->
+    <div class="modal fade" id="feedback-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="feedback-name">Name</label>
+                        <input name="name" autocomplete="off" type="name" class="form-control" id="feedback-name" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-organization">Organization</label>
+                        <input name="organization" autocomplete="off" type="info" class="form-control" id="feedback-organization">
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-comments">Comments</label>
+                        <textarea name="comments" required autocomplete="off" class="form-control" id="feedback-comments" rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success" onclick="ctrlMain.submitFeedback();">Submit</button>
+                    <span id="feedback-result" class="ml-2"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Samples Modal -->
+    <div class="modal fade" id="samples-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tips</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary">Browsing Different Samples</h6>
+                    <p>All of your samples have been loaded in the list below. Clicking on a selection will display their corresponding MS intensities.</p>
+
+                    <h6 class="text-primary">Changing Files</h6>
+                    <p>You may upload another file if you'd like. They should be of type <strong>csv</strong> and be in the correct format.
+                    This <a href="csv/sample.csv" data-tooltip="tooltip" data-placement="top" title="sample.csv">sample file</a> demonstrates the proper formatting; there are 3 columns. The column headers are in <strong>bold</strong> below...</p>
+
+                    <h6 class="text-primary">File Formatting</h6>
+                    <ol>
+                        <li>
+                            <strong>id</strong>:
+                            The complete taxonomic path/identity, delimited by "@".<br>
+                        </li>
+                        <li>
+                            <strong>value</strong>:
+                            The average MS intensity across all samples.<br>
+                        </li>
+                        <li>
+                            <strong>*sample intensities*</strong> :
+                            The MS intensity of each sample, delimited by ";".
+                            The header title should list the name of all samples, also delimited by ";". There must be no spacing in the header title.<br>
+                        </li>
+                    </ol>
+                    <h6 class="text-primary">Example</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">value</th>
+                                <th scope="col">s1;s2;s3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>cellular organisms@Bacteria</td>
+                                <td>580970.92</td>
+                                <td>1039022.58;703890.17;0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart-help Modals (5) -->
+    <div class="modal fade" id="circle-packing-help-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Circle Packing</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary">Chart Description</h6>
+                        <p>Circle packing gives a broad overview of relative proportions between MS-identified taxa.</p>
+
+                    <h6 class="text-primary">Interaction</h6>
+                        <p>Click on a taxon node to travel towards that taxon. The subtaxa names for that node will be displayed.</p>
+
+                    <h6 class="text-success">Toolbar Options</h6>
+                        <p><i class="fas fa-font"></i> Increase or decrease the font size of taxon labels</p>
+
+                    <h6 class="text-success">Context Menu Options <span class="text-dark">(right-clicking on a node)</span></h6>
+                        <p class="mb-0"><i class="fas fa-chart-bar"></i> Compare MS-intensities of a taxon accross all samples</p>
+                        <p><i class="fas fa-chart-bar"></i> Compare MS-intensities of subtaxa within this sample</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="treemap-help-modal" tabindex="-1">
+        <div class="modal-dialog mw-100 w-50 modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Treemap</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary">Chart Description</h6>
+                        <p>
+                            Treemaps use nested rectangles to display hierarchical data. Combined with a dynamic color scheme, this visualization can create what can be labelled as abstract art :P
+                            Each rectangle represents a single taxon at the given depth and its area is proportional to its MS intensity. It must be noted that for every node, unknown peptides that contribute to
+                            the intensity have been <strong>excluded</strong> to draw the treemap without gaps. To include unknown peptide intensities, select the toggle button
+                            in the toolbar. However, this may result in gaps between the rectangles.
+                        </p>
+    
+                    <h6 class="text-primary">Interaction</h6>
+                        <p>Zoom in and out with the scroll wheel and pan the view by clicking + dragging.</p>
+    
+                    <h6 class="text-success">Toolbar Options</h6>
+                        <p class="mb-0"><i class="fas fa-search"></i> Change the current taxonomic level / draw depth</p>
+                        <p class="mb-0"><i class="fas fa-font"></i> Increase or decrease the font size of taxon labels</p>
+                        <p><i class="fas fa-genderless"></i> Include or exclude unknown peptides</p>
+
+                    <h6 class="text-success">Context Menu Options <span class="text-dark">(right-clicking on a rectangle)</span></h6>
+                        <p class="mb-0"><i class="fas fa-chart-bar"></i> Compare MS-intensities of a taxon accross all samples</p>
+                        <p><i class="fas fa-chart-bar"></i> Compare MS-intensities of subtaxa within this sample</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="sunburst-help-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sunburst</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary">Chart Description</h6>
+                        <p>Sunbursts clearly display taxa proportions. That's it.</p>
+    
+                    <h6 class="text-primary">Interaction</h6>
+                        <p>Click on an arc visit that taxon. The corresponding proportion for that node will be displayed.</p>
+    
+                    <h6 class="text-success">Toolbar Options</h6>
+                        <p>None at the moment</p>
+                        
+                    <h6 class="text-success">Context Menu Options <span class="text-dark">(right-clicking on an arc)</span></h6>
+                        <p>None at the moment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tree-help-modal" tabindex="-1">
+        <div class="modal-dialog mw-100 w-50 modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Horizontal and Radial Tree</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary">Chart Description</h6>
+                        <p>
+                            Trees are great for visualizing diversity and relationships between taxa. In the horizontal tree, nodes are sorted by their MS intensity in descending order
+                            (greatest value nodes at the top of the chart). The radial tree intuitively shows the proportion of taxa
+                            with their circular nature and with the help of a color scheme, mimicking a pie chart. 
+                        </p>
+    
+                    <h6 class="text-primary">Interaction</h6>
+                        <ul>
+                            <li>Zoom in and out with the scroll wheel and pan the view by right-clicking + dragging.</li>
+                            <li>Collapse a node by left-clicking on it. This may also yield big performance boosts if a lot of irrelevant nodes are collapsed.</li>
+                            <li>
+                                Select multiple nodes with ctrl+left-click. For now, this function is only useful for coloring multiple nodes at a time but will be
+                                expanded on in the future (ie. to carry further analysis).
+                            </li>
+                        </ul>
+    
+                    <h6 class="text-success">Toolbar Options</h6>
+                        <p class="mb-0"><i class="fas fa-search"></i> Zoom in or out</p>
+                        <p class="mb-0"><i class="fas fa-font"></i> Toggle and increase/decrease font-size of taxon labels</p>
+                        <p class="mb-0"><i class="fas fa-genderless"></i> Normalize radius of all nodes</p>
+                        <p class="mb-0"><i class="fas fa-palette text-danger"></i> Customize color palette and theme</p>
+                        <p><i class="fas fa-sliders-h text-danger"></i> The slider colors nodes based on different taxonomic levels</p>
+                        
+    
+                    <h6 class="text-success">Context Menu Options <span class="text-dark">(right-clicking on a node)</span></h6>
+                        <p class="mb-0"><i class="fas fa-chart-bar"></i> Compare MS-intensities of this taxon accross all samples, or of subtaxa within this sample</p>
+                        <p class="mb-0"><i class="fas fa-genderless"></i> Collapse all other nodes, or expand child nodes here</p>
+                        <p class="mb-0"><i class="fas fa-hand-pointer"></i> Select this node, direct subnodes, or all subnodes</p>
+                        <p><i class="fas fa-paint-roller text-danger"></i> Color selected nodes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="hierarchical-bars-help-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hierarchical Bar Chart</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary">Chart Description</h6>
+                    <p>This chart displays quantitative information with the least amount of distraction.</p>
+    
+                    <h6 class="text-primary">Interaction</h6>
+                    <p>Jump down a taxonomic rank by clicking on a bar, or jump up by clicking on the background.</p>
+    
+                    <h6 class="text-success">Toolbar Options</h6>
+                    <p>None at the moment</p>
+    
+                    <h6 class="text-success">Context Menu Options <span class="text-dark">(right-clicking on a bar)</span></h6>
+                        <p class="mb-0"><i class="fas fa-chart-bar"></i> Compare MS-intensities of a taxon accross all samples</p>
+                        <p><i class="fas fa-chart-bar"></i> Compare MS-intensities of subtaxa within this sample</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning Modal -->
+    <div class="modal fade" id="warning-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Oh Snap</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>The file did not match the correct format and was not loaded.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPanel -->
+    <script src="js/jspanel.min.js"></script>
+    <!-- BS4 -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- Farbtastic Colorpicker -->
+    <script type="text/javascript" src="js/farbtastic.js"></script>
+    <!-- Convert to PNG -->
+    <script type="text/javascript" src="js/saveSvgAsPng.js"></script>
+
+    <script>
+        // Tooltip for GUI (not for visualization charts) 
+        $('[data-tooltip="tooltip"]').tooltip();
+
+        $(document).ready(function(){
+            $('[data-tooltip=tooltip]').tooltip({ trigger: "hover" });
+        });
+
+        $(document).ready(function(){
+            $('[data-tooltip="tooltip"]').click(function () {
+                $('[data-tooltip="tooltip"]').tooltip("hide");
+
+            });
+        });
+    </script>
+    <!-- D3 App -->
+    <script src="js/d3.js"></script>
+    <script type="text/javascript" src="js/d3-context-menu.js"></script>
+    <script type="text/javascript" src="js/chart-tree.js"></script>
+    <script type="text/javascript" src="js/chart-hierarchical-bars.js"></script>
+    <script type="text/javascript" src="js/chart-static-treemap.js"></script>
+    <script type="text/javascript" src="js/chart-circle-packing.js"></script>
+    <script type="text/javascript" src="js/chart-sunburst.js"></script>
+    <script type="text/javascript" src="js/sidebar.js"></script>
+    <script type="text/javascript" src="js/view-utils.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

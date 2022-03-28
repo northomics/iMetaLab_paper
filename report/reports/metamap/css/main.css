@@ -1,0 +1,50 @@
+/* General */
+
+html, body {
+    height: 96%;
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+#chart-display {
+    background-color: white;
+}
+
+#csv-display {
+    display: none;
+    height: 800px;
+    width: 100%;
+    overflow: auto;
+}
+
+/* Sidebar */
+
+.sidebar-item {
+    margin-bottom: 0.5em;
+}
+
+#samples {
+    background-color: rgb(236, 236, 236);
+    overflow: auto;
+}
+
+#toolbar-slider {
+    width: 76%;
+}
+
+#color-rank {
+    vertical-align: top;
+    display:inline-block;
+    margin-bottom:1em;
+}
+
+#mini-chart {
+    background-color: rgb(236, 236, 236);
+}
+
+.dropdown-toggle::after { /* removes arrow from dropdown button */
+    display:none;
+}
